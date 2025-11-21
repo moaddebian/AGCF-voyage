@@ -10,7 +10,7 @@ AGCF Voyages est une application web complète de réservation de billets de tra
 * Sélection de la gare de départ et d'arrivée
 * Sélection de la date et de l'heure de départ
 * Affichage des offres spéciales
-
+  
 ### Recherche de trains
 
 * Affichage des trains disponibles selon les critères de recherche
