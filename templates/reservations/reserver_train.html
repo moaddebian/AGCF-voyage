@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Réserver un train - AGCF Voyages{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-ticket-perforated"></i> Détails du train</h4>
+                </div>
+                <div class="card-body">
+                    <h5>Train {{ train.numero }}</h5>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <p><strong>Gare de départ:</strong><br>
+                            {{ train.gare_depart.nom }}<br>
+                            <small class="text-muted">{{ train.gare_depart.ville }}</small></p>
+                            <p><strong>Heure de départ:</strong> {{ train.heure_depart|time:"H:i" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Gare d'arrivée:</strong><br>
+                            {{ train.gare_arrivee.nom }}<br>
+                            <small class="text-muted">{{ train.gare_arrivee.ville }}</small></p>
+                            <p><strong>Heure d'arrivée:</strong> {{ train.heure_arrivee|time:"H:i" }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Durée:</strong> {{ train.duree_formatee }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Classe:</strong> {{ train.get_classe_display }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-cart"></i> Réserver</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_nombre_places" class="form-label">Nombre de places *</label>
+                            {{ reservation_form.nombre_places }}
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Prix du billet</strong></label>
+                            <div class="card bg-light p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Prix unitaire:</span>
+                                    <strong class="text-primary">{{ train.prix_base }} DH</strong>
+                                </div>
+                                <div id="prix-total-display" class="mt-2 pt-2 border-top">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold">Total:</span>
+                                        <span class="text-success fs-5 fw-bold" id="prix-total">{{ train.prix_base }} DH</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info mb-3">
+                            <small><i class="bi bi-info-circle"></i> Après confirmation, vous serez redirigé vers le paiement.</small>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-credit-card"></i> Procéder au paiement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const nombrePlacesInput = document.getElementById('id_nombre_places');
+    const prixUnitaire = {{ train.prix_base }};
+    const prixTotalDisplay = document.getElementById('prix-total');
+    
+    function updatePrixTotal() {
+        const nombrePlaces = parseInt(nombrePlacesInput.value) || 1;
+        const prixTotal = prixUnitaire * nombrePlaces;
+        prixTotalDisplay.textContent = prixTotal.toFixed(2) + ' DH';
+    }
+    
+    nombrePlacesInput.addEventListener('input', updatePrixTotal);
+    nombrePlacesInput.addEventListener('change', updatePrixTotal);
+    
+    // Initialiser le prix total
+    updatePrixTotal();
+});
+</script>
+{% endblock %}
+

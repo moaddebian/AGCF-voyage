@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes réservations - AGCF Voyages{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">
+        <i class="bi bi-ticket-perforated"></i> Mes réservations
+    </h2>
+    
+    <div class="card mb-3">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Filtrer par statut</label>
+                    <select name="statut" class="form-select">
+                        <option value="">Tous</option>
+                        <option value="confirmee" {% if statut_actuel == 'confirmee' %}selected{% endif %}>Confirmées</option>
+                        <option value="en_attente" {% if statut_actuel == 'en_attente' %}selected{% endif %}>En attente</option>
+                        <option value="annulee" {% if statut_actuel == 'annulee' %}selected{% endif %}>Annulées</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-funnel"></i> Filtrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    {% if reservations %}
+    <div class="row">
+        {% for reservation in reservations %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>{{ reservation.code_reservation }}</strong>
+                    {% if reservation.statut == 'confirmee' %}
+                    <span class="badge bg-success">{{ reservation.get_statut_display }}</span>
+                    {% elif reservation.statut == 'annulee' %}
+                    <span class="badge bg-danger">{{ reservation.get_statut_display }}</span>
+                    {% else %}
+                    <span class="badge bg-warning">{{ reservation.get_statut_display }}</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <p><strong>Train:</strong> {{ reservation.train.numero }}</p>
+                    <p><strong>Trajet:</strong> {{ reservation.train.gare_depart.ville }} → {{ reservation.train.gare_arrivee.ville }}</p>
+                    <p><strong>Date:</strong> {{ reservation.date_voyage|date:"d/m/Y" }}</p>
+                    <p><strong>Départ:</strong> {{ reservation.train.heure_depart|time:"H:i" }}</p>
+                    <p><strong>Places:</strong> {{ reservation.nombre_places }}</p>
+                    <p><strong>Prix total:</strong> <span class="text-primary fw-bold">{{ reservation.prix_total }} DH</span></p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'reservations:detail_reservation' reservation.code_reservation %}" 
+                       class="btn btn-sm btn-primary">
+                        <i class="bi bi-eye"></i> Détails
+                    </a>
+                    {% if reservation.statut == 'confirmee' %}
+                    <a href="{% url 'reservations:telecharger_billet' reservation.code_reservation %}" 
+                       class="btn btn-sm btn-success">
+                        <i class="bi bi-download"></i> Télécharger
+                    </a>
+                    {% endif %}
+                    {% if reservation.statut != 'annulee' and reservation.statut != 'utilisee' %}
+                    <a href="{% url 'reservations:annuler_reservation' reservation.code_reservation %}" 
+                       class="btn btn-sm btn-danger">
+                        <i class="bi bi-x-circle"></i> Annuler
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Aucune réservation trouvée.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

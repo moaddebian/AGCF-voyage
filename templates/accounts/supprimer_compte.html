@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Supprimer mon compte - AGCF Voyages{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> Supprimer mon compte
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <i class="bi bi-info-circle"></i> 
+                        <strong>Attention !</strong> Cette action est irréversible. Toutes vos données seront définitivement supprimées.
+                    </div>
+                    
+                    <p>En supprimant votre compte, vous perdrez :</p>
+                    <ul>
+                        <li>Toutes vos réservations</li>
+                        <li>Vos cartes de réduction</li>
+                        <li>Vos informations personnelles</li>
+                    </ul>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Confirmer la suppression
+                            </button>
+                            <a href="{% url 'accounts:profil' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

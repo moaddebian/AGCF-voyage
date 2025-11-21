@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Annuler la réservation - AGCF Voyages{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> Annuler la réservation
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-info-circle"></i> 
+                        Êtes-vous sûr de vouloir annuler cette réservation ?
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p><strong>Code de réservation:</strong> {{ reservation.code_reservation }}</p>
+                            <p><strong>Train:</strong> {{ reservation.train.numero }}</p>
+                            <p><strong>Date:</strong> {{ reservation.date_voyage|date:"d/m/Y" }}</p>
+                            <p><strong>Prix total:</strong> {{ reservation.prix_total }} DH</p>
+                        </div>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-x-circle"></i> Confirmer l'annulation
+                            </button>
+                            <a href="{% url 'reservations:detail_reservation' reservation.code_reservation %}" 
+                               class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Retour
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
