@@ -1,155 +1,144 @@
-AGCF Voyages - Système de Réservation de Trains
+Here is your "README" with the same layout and content, but without the emojis, written in a more professional tone:
+
+---
+
+# AGCF Voyages - Système de Réservation de Trains
 
 AGCF Voyages est une application web complète de réservation de billets de train développée avec Django. Le système permet aux utilisateurs de rechercher, réserver et gérer leurs billets de train de manière intuitive et sécurisée.
 
-Fonctionnalités principales
-Page d'accueil
+## Fonctionnalités principales
 
-Interface moderne et claire avec barre de recherche
+### Page d'accueil
 
-Sélection de la gare de départ et d'arrivée
+* Interface moderne et claire avec barre de recherche
+* Sélection de la gare de départ et d'arrivée
+* Sélection de la date et de l'heure de départ
+* Affichage des offres spéciales
 
-Sélection de la date et de l'heure de départ
+### Recherche de trains
 
-Affichage des offres spéciales
+* Affichage des trains disponibles selon les critères de recherche
+* Informations détaillées : heure de départ/arrivée, durée, classe, prix
+* Filtres par classe, prix et horaire
+* Pagination des résultats
 
-Recherche de trains
+### Gestion de compte utilisateur
 
-Affichage des trains disponibles selon les critères de recherche
+* Inscription et création de compte
+* Connexion/Déconnexion
+* Modification des informations personnelles
+* Suppression de compte
+* Gestion des cartes de réduction
 
-Informations détaillées : heure de départ/arrivée, durée, classe, prix
+### Réservation et paiement
 
-Filtres par classe, prix et horaire
+* Réservation de billets avec sélection du nombre de places
+* Application de cartes de réduction
+* Ajout des informations des passagers
+* Paiement en ligne (simulation - carte bancaire, PayPal)
+* Génération automatique du billet PDF
 
-Pagination des résultats
+### Tableau de bord
 
-Gestion de compte utilisateur
+* Vue d'ensemble des réservations
+* Statistiques personnelles
+* Accès rapide aux dernières réservations
+* Gestion complète des billets
 
-Inscription et création de compte
+### Offres et promotions
 
-Connexion/Déconnexion
+* Consultation des offres spéciales
+* Affichage des réductions disponibles
+* Notifications personnalisées
 
-Modification des informations personnelles
+### Billets électroniques
 
-Suppression de compte
+* Génération de billets PDF professionnels
+* Code QR pour contrôle à l'embarquement
+* Envoi automatique par email
+* Téléchargement depuis l'espace utilisateur
 
-Gestion des cartes de réduction
+## Installation
 
-Réservation et paiement
+### Prérequis
 
-Réservation de billets avec sélection du nombre de places
+* Python 3.8 ou supérieur
+* pip (gestionnaire de paquets Python)
 
-Application de cartes de réduction
+### Étapes d'installation
 
-Ajout des informations des passagers
+1. **Cloner ou télécharger le projet**
 
-Paiement en ligne (simulation - carte bancaire, PayPal)
-
-Génération automatique du billet PDF
-
-Tableau de bord
-
-Vue d'ensemble des réservations
-
-Statistiques personnelles
-
-Accès rapide aux dernières réservations
-
-Gestion complète des billets
-
-Offres et promotions
-
-Consultation des offres spéciales
-
-Affichage des réductions disponibles
-
-Notifications personnalisées
-
-Billets électroniques
-
-Génération de billets PDF professionnels
-
-Code QR pour contrôle à l'embarquement
-
-Envoi automatique par email
-
-Téléchargement depuis l'espace utilisateur
-
-Installation
-Prérequis
-
-Python 3.8 ou supérieur
-
-pip (gestionnaire de paquets Python)
-
-Étapes d'installation
-
-Cloner ou télécharger le projet
-
+```bash
 cd AGCF
+```
 
+2. **Créer un environnement virtuel (recommandé)**
 
-Créer un environnement virtuel (recommandé)
-
+```bash
 python -m venv venv
+```
 
+3. **Activer l'environnement virtuel**
 
-Activer l'environnement virtuel
+   * Sur Windows:
 
-Sur Windows:
+   ```bash
+   venv\Scripts\activate
+   ```
 
-venv\Scripts\activate
+   * Sur Linux/Mac:
 
+   ```bash
+   source venv/bin/activate
+   ```
 
-Sur Linux/Mac:
+4. **Installer les dépendances**
 
-source venv/bin/activate
-
-
-Installer les dépendances
-
+```bash
 pip install -r requirements.txt
+```
 
+5. **Effectuer les migrations**
 
-Effectuer les migrations
-
+```bash
 python manage.py makemigrations
 python manage.py migrate
+```
 
+6. **Créer un superutilisateur (pour accéder à l'admin)**
 
-Créer un superutilisateur (pour accéder à l'admin)
-
+```bash
 python manage.py createsuperuser
+```
 
+7. **Lancer le serveur de développement**
 
-Lancer le serveur de développement
-
+```bash
 python manage.py runserver
+```
 
+8. **Accéder à l'application**
 
-Accéder à l'application
+   * Application: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+   * Administration: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
 
-Application: http://127.0.0.1:8000/
-
-Administration: http://127.0.0.1:8000/admin/
-
-Configuration des données initiales
+## Configuration des données initiales
 
 Pour tester l'application, vous devez créer des données de test (gares, trains, etc.) via l'interface d'administration Django.
 
-Exemple de données à créer:
+### Exemple de données à créer:
 
-Gares: Créer plusieurs gares marocaines (ex: Casa-Voyageurs, Rabat-Ville, Fès-Ville, Marrakech)
+1. **Gares**: Créer plusieurs gares marocaines (ex: Casa-Voyageurs, Rabat-Ville, Fès-Ville, Marrakech)
+2. **Trains**: Créer des trains avec leurs horaires et prix (Al Boraq, trains classiques)
+3. **Cartes de réduction**: Créer différents types de cartes (Jeune, Senior, etc.)
+4. **Offres promotionnelles**: Créer des offres spéciales
 
-Trains: Créer des trains avec leurs horaires et prix (Al Boraq, trains classiques)
+**Note**: La commande `init_data` crée automatiquement 10 gares marocaines et 12 trains avec des trajets réalistes.
 
-Cartes de réduction: Créer différents types de cartes (Jeune, Senior, etc.)
+## Structure du projet
 
-Offres promotionnelles: Créer des offres spéciales
-
-Note: La commande init_data crée automatiquement 10 gares marocaines et 12 trains avec des trajets réalistes.
-
-Structure du projet
+```
 AGCF/
 ├── agcf_voyage/          # Configuration du projet Django
 │   ├── settings.py       # Paramètres du projet
@@ -175,74 +164,67 @@ AGCF/
 ├── media/                # Fichiers média (billets PDF, images)
 ├── manage.py             # Script de gestion Django
 └── requirements.txt      # Dépendances Python
+```
 
-Fonctionnalités techniques
-Modèles de données
+## Fonctionnalités techniques
 
-Gare: Gares de départ et d'arrivée
+### Modèles de données
 
-Train: Informations sur les trains (horaires, prix, places)
+* **Gare**: Gares de départ et d'arrivée
+* **Train**: Informations sur les trains (horaires, prix, places)
+* **Reservation**: Réservations des utilisateurs
+* **Passager**: Informations des passagers
+* **CarteReduction**: Types de cartes de réduction
+* **CarteReductionUtilisateur**: Cartes associées aux utilisateurs
+* **OffrePromotion**: Offres et promotions
 
-Reservation: Réservations des utilisateurs
+### Sécurité
 
-Passager: Informations des passagers
+* Authentification Django intégrée
+* Protection CSRF
+* Validation des formulaires
+* Gestion sécurisée des mots de passe
 
-CarteReduction: Types de cartes de réduction
+### Génération de PDF
 
-CarteReductionUtilisateur: Cartes associées aux utilisateurs
+* Utilisation de ReportLab
+* Code QR intégré
+* Design professionnel
+* Informations complètes du billet
 
-OffrePromotion: Offres et promotions
+### Email
 
-Sécurité
+* Envoi automatique des billets
+* Configuration via settings.py
+* Support console pour le développement
 
-Authentification Django intégrée
+## Personnalisation
 
-Protection CSRF
+### Configuration email
 
-Validation des formulaires
+Pour activer l'envoi d'emails réels, modifiez `agcf_voyage/settings.py`:
 
-Gestion sécurisée des mots de passe
-
-Génération de PDF
-
-Utilisation de ReportLab
-
-Code QR intégré
-
-Design professionnel
-
-Informations complètes du billet
-
-Email
-
-Envoi automatique des billets
-
-Configuration via settings.py
-
-Support console pour le développement
-
-Personnalisation
-Configuration email
-
-Pour activer l'envoi d'emails réels, modifiez agcf_voyage/settings.py:
-
+```python
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'votre-email@gmail.com'
 EMAIL_HOST_PASSWORD = 'votre-mot-de-passe'
+```
 
-Intégration de paiement
+### Intégration de paiement
 
 Actuellement, le système simule le paiement. Pour une intégration réelle:
 
-Stripe: https://stripe.com/docs/payments
+* Stripe: [https://stripe.com/docs/payments](https://stripe.com/docs/payments)
+* PayPal: [https://developer.paypal.com/docs/api/overview/](https://developer.paypal.com/docs/api/overview/)
 
-PayPal: https://developer.paypal.com/docs/api/overview/
+## Développement
 
-Développement
-Commandes utiles
+### Commandes utiles
+
+```bash
 # Créer les migrations
 python manage.py makemigrations
 
@@ -257,26 +239,26 @@ python manage.py runserver
 
 # Collecter les fichiers statiques (production)
 python manage.py collectstatic
+```
 
-Contribution
+## Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à:
 
-Signaler des bugs
+* Signaler des bugs
+* Proposer de nouvelles fonctionnalités
+* Améliorer la documentation
+* Optimiser le code
 
-Proposer de nouvelles fonctionnalités
-
-Améliorer la documentation
-
-Optimiser le code
-
-Licence
+## Licence
 
 Ce projet est fourni à des fins éducatives et de démonstration.
 
-Support
+## Support
 
 Pour toute question ou problème, veuillez créer une issue sur le dépôt du projet.
 
-Développé avec ❤️ en utilisant Django
+---
+
+**Développé avec ❤️ par MOAD
 
