@@ -1,7 +1,3 @@
-Here is your "README" with the same layout and content, but without the emojis, written in a more professional tone:
-
----
-
 # AGCF Voyages - Système de Réservation de Trains
 
 AGCF Voyages est une application web complète de réservation de billets de train développée avec Django. Le système permet aux utilisateurs de rechercher, réserver et gérer leurs billets de train de manière intuitive et sécurisée.
