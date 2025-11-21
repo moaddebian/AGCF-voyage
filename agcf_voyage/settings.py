@@ -19,7 +19,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-agcf-voyage-dev-key-c
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Allowed hosts for production
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else ['*']
+if os.environ.get('ALLOWED_HOSTS'):
+    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+elif os.environ.get('VERCEL'):
+    # Default for Vercel deployment
+    ALLOWED_HOSTS = ['.vercel.app', '.now.sh', '*']
+else:
+    ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -73,30 +79,40 @@ WSGI_APPLICATION = 'agcf_voyage.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Configuration MySQL
-# Pour utiliser SQLite en développement, commentez la section MySQL et décommentez SQLite ci-dessous
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'agcf_voyage'),
-        'USER': os.environ.get('DB_USER', 'root'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'Mouad1232002'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset': 'utf8mb4',
-        },
-    }
-}
+# Configuration MySQL avec fallback SQLite pour Vercel
+# Si les variables d'environnement MySQL ne sont pas définies, utilise SQLite
+DB_NAME = os.environ.get('DB_NAME')
+DB_USER = os.environ.get('DB_USER')
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
+DB_HOST = os.environ.get('DB_HOST')
+DB_PORT = os.environ.get('DB_PORT', '3306')
 
-# Configuration SQLite (pour développement local - décommentez pour utiliser)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+# Vérifier si toutes les variables MySQL sont présentes
+if DB_NAME and DB_USER and DB_PASSWORD and DB_HOST:
+    # Configuration MySQL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': DB_NAME,
+            'USER': DB_USER,
+            'PASSWORD': DB_PASSWORD,
+            'HOST': DB_HOST,
+            'PORT': DB_PORT,
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                'charset': 'utf8mb4',
+            },
+            'CONN_MAX_AGE': 0,  # Important for serverless (Vercel)
+        }
+    }
+else:
+    # Fallback vers SQLite si MySQL n'est pas configuré (pour Vercel sans DB)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -135,7 +151,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# For Vercel deployment
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static') if os.environ.get('VERCEL') else BASE_DIR / 'staticfiles'
 
 # WhiteNoise configuration for static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
