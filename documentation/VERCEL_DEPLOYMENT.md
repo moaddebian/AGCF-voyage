@@ -85,8 +85,8 @@ Ce guide décrit la préparation et le déploiement du projet sur Vercel avec `@
 - Le dépôt racine contient `vercel.json` configuré pour :
   - Installer les dépendances : `pip install -r backend/requirements.txt`.
   - Collecter les statiques : `cd backend && python manage.py collectstatic --noinput`.
-  - Utiliser `@vercel/python` sur `api/index.py` (wrapper WSGI) avec inclusion des dossiers `backend/**` et `frontend/**`.
-  - Router `/static/*` vers `frontend/staticfiles` et toutes les autres routes vers Django via `api/index.py`.
+- Utiliser `@vercel/python` sur `backend/wsgi.py` (wrapper WSGI) avec inclusion des dossiers `backend/**` et `frontend/**`.
+- Router `/static/*` vers `frontend/staticfiles` et toutes les autres routes vers Django via `backend/wsgi.py`.
 
 ## Variables d'environnement à définir sur Vercel
 Définissez ces variables dans **Project Settings > Environment Variables** :

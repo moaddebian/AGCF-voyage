@@ -4,7 +4,7 @@
   "buildCommand": "cd backend && python manage.py collectstatic --noinput",
   "builds": [
     {
-      "src": "api/index.py",
+      "src": "backend/wsgi.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "50mb",
@@ -16,7 +16,7 @@
     }
   ],
   "routes": [
-    { "src": "/static/(.*)", "dest": "/frontend/staticfiles/$1" },
-    { "src": "/(.*)", "dest": "/api/index.py" }
+    { "src": "/static/(.*)", "dest": "frontend/staticfiles/$1" },
+    { "src": "/(.*)", "dest": "backend/wsgi.py" }
   ]
 }
