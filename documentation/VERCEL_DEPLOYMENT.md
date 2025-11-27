@@ -26,7 +26,7 @@ Ce guide décrit la préparation et le déploiement du projet sur Vercel avec `@
 4) **Créer le projet sur Vercel**
    - Tableau de bord > **New Project** > **Import Git Repository**.
    - Racine `/` ; laissez les commandes auto-détectées par `vercel.json`.
-5) **Déployer** : lancez le build. Les routes et la collecte des statiques sont gérées automatiquement par `vercel.json` et Whitenoise.
+5) **Déployer** : lancez le build. Les routes et la collecte des statiques sont gérées automatiquement par `vercel.json` (build sur `backend/manage.py`, routing vers `backend/wsgi.py`) et Whitenoise.
 6) **Appliquer les migrations** (après le premier déploiement)
    ```bash
    vercel env pull .env.local   # optionnel pour tester localement
@@ -85,8 +85,9 @@ Ce guide décrit la préparation et le déploiement du projet sur Vercel avec `@
 - Le dépôt racine contient `vercel.json` configuré pour :
   - Installer les dépendances : `pip install -r backend/requirements.txt`.
   - Collecter les statiques : `cd backend && python manage.py collectstatic --noinput`.
-- Utiliser `@vercel/python` sur `backend/wsgi.py` (wrapper WSGI) avec inclusion des dossiers `backend/**` et `frontend/**`.
-- Router `/static/*` vers `frontend/staticfiles` et toutes les autres routes vers Django via `backend/wsgi.py`.
+- Build : `@vercel/python` est pointé sur `backend/manage.py` (ce qui embarque toutes les dépendances et le code grâce à `includeFiles`).
+- Routage : `/static/*` vers `frontend/staticfiles` et tout le reste vers `backend/wsgi.py` qui expose `application`/`app` pour Django.
+- Remarque : la présence de `builds` dans `vercel.json` force Vercel à utiliser cette configuration (le message « Build and Development Settings … will not apply » est attendu).
 
 ## Variables d'environnement à définir sur Vercel
 Définissez ces variables dans **Project Settings > Environment Variables** :

@@ -1,8 +1,8 @@
 import os
+from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "agcf_voyage.settings")
 
-from agcf_voyage.wsgi import application as app
-
-# Alias expected by @vercel/python
-application = app
+application = get_wsgi_application()
+# Alias for @vercel/python
+app = application
