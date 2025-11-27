@@ -5,6 +5,13 @@ Django settings for agcf_voyage project.
 from pathlib import Path
 import os
 
+# Charger les variables d'environnement depuis .env si disponible
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv n'est pas installé, continuer sans
+
 try:
     import dj_database_url
 except ImportError:
