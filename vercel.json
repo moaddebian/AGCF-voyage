@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "installCommand": "pip install -r backend/requirements.txt",
+  "buildCommand": "cd backend && python manage.py collectstatic --noinput",
+  "builds": [
+    {
+      "src": "backend/manage.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "50mb",
+        "includeFiles": [
+          "backend/**",
+          "frontend/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    { "src": "/static/(.*)", "dest": "frontend/staticfiles/$1" },
+    { "src": "/(.*)", "dest": "backend/manage.py" }
+  ]
+}
