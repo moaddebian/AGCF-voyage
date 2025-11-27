@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Ajouter une carte de réduction - AGCF Voyages{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-credit-card"></i> Ajouter une carte de réduction
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <h6><i class="bi bi-exclamation-triangle"></i> Erreurs dans le formulaire :</h6>
+                        <ul class="mb-0">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ field|title }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.carte.id_for_label }}" class="form-label">{{ form.carte.label }}</label>
+                            {{ form.carte }}
+                            {% if form.carte.errors %}
+                                <div class="text-danger small">{{ form.carte.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.numero_carte.id_for_label }}" class="form-label">{{ form.numero_carte.label }}</label>
+                            {{ form.numero_carte }}
+                            {% if form.numero_carte.errors %}
+                                <div class="text-danger small">{{ form.numero_carte.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.date_expiration.id_for_label }}" class="form-label">{{ form.date_expiration.label }}</label>
+                            {{ form.date_expiration }}
+                            {% if form.date_expiration.errors %}
+                                <div class="text-danger small">{{ form.date_expiration.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'accounts:profil' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Ajouter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

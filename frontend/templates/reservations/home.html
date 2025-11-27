@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Accueil - AGCF Voyages{% endblock %}
+
+{% block extra_css %}
+<style>
+    .select-placeholder.placeholder-empty {
+        color: #9da3b4;
+    }
+    .custom-datetime-trigger {
+        background-color: #fff;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        width: 100%;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+    .custom-datetime-trigger:focus,
+    .custom-datetime-trigger:hover {
+        border-color: #ff6600;
+        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+        transform: translateY(-2px);
+    }
+    .custom-datetime-trigger .picker-label {
+        font-size: 0.95rem;
+        color: #7a7a7a;
+    }
+    .custom-datetime-trigger .picker-value {
+        font-size: 1.1rem;
+        font-weight: normal;
+        color: #000;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .custom-datetime-trigger .picker-value .time {
+        color: #ff6600;
+    }
+    .datetime-modal .time-option {
+        border: 2px solid #e9ecef;
+        border-radius: 999px;
+        padding: 0.5rem 1.25rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 500;
+    }
+    .datetime-modal .time-option:hover {
+        border-color: #ff6600;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(255, 102, 0, 0.2);
+    }
+    .datetime-modal .time-option.active {
+        background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%);
+        color: #fff;
+        border-color: #ff6600;
+        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+    }
+    .hidden-inputs {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+        height: 0;
+        overflow: hidden;
+    }
+    #id_date_retour::placeholder {
+        color: #9da3b4;
+    }
+    #id_date_retour::-webkit-input-placeholder {
+        color: #9da3b4;
+    }
+    #id_date_retour::-moz-placeholder {
+        color: #9da3b4;
+        opacity: 1;
+    }
+    #id_date_retour:-ms-input-placeholder {
+        color: #9da3b4;
+    }
+    .tab-btn {
+        background-color: #fff;
+        border: none;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        color: #666;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0;
+        position: relative;
+    }
+    .tab-btn:first-child {
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+    }
+    .tab-btn:last-child {
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
+    .tab-btn:hover {
+        background-color: rgba(255, 102, 0, 0.1);
+        color: #ff6600;
+        transform: translateY(-2px);
+    }
+    .tab-btn.active {
+        background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+    }
+    .tab-btn.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 3px;
+        background: white;
+        border-radius: 2px;
+    }
+    .tab-content {
+        animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 mb-4" data-translate="Bienvenue sur AGCF Voyages">
+            <img src="{% static 'images/logo-agcf.jpg' %}?v=2" alt="AGCF Voyages Logo" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%; margin-right: 1rem; vertical-align: middle; background: white; padding: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);" onerror="this.style.display='none'; console.error('Logo image failed to load');">
+            Bienvenue sur AGCF Voyages
+        </h1>
+        <p class="lead" style="font-style: italic;" data-translate="Réservez vos billets de train en quelques clics">Réservez vos billets de train en quelques clics</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="search-box">
+                <!-- Boutons de navigation -->
+                <div class="d-flex justify-content-center mb-4">
+                    <div class="btn-group" role="group" style="border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <button type="button" class="btn tab-btn active" id="tab-search" data-tab="search">
+                    <i class="bi bi-search"></i> <span data-translate="Rechercher votre voyage">Rechercher votre voyage</span>
+                        </button>
+                        <button type="button" class="btn tab-btn" id="tab-manage" data-tab="manage">
+                            <i class="bi bi-clock-history"></i> <span data-translate="Je gère ma réservation">Je gère ma réservation</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section Rechercher votre voyage -->
+                <div id="search-section" class="tab-content">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                                <label class="form-label fw-semibold" data-translate="Gare de départ*">Gare de départ*</label>
+                                {{ form.gare_depart }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold" data-translate="Gare d'arrivée*">Gare d'arrivée*</label>
+                                {{ form.gare_arrivee }}
+                        </div>
+                        <div class="col-md-6">
+                                <label class="form-label fw-semibold" data-translate="Date de départ*">Date de départ*</label>
+                                <button type="button" class="custom-datetime-trigger" id="openDateTimePicker">
+                                    <span class="picker-value" id="selectedDateDisplay">jj/mm/aaaa</span>
+                                </button>
+                                <div class="hidden-inputs">
+                                    {{ form.date_depart }}
+                                    {{ form.heure_depart }}
+                                </div>
+                        </div>
+                        <div class="col-md-6">
+                                <label class="form-label fw-semibold" data-translate="Date de retour">Date de retour</label>
+                                {{ form.date_retour }}
+                        </div>
+                        <div class="col-md-6">
+                                <label class="form-label fw-semibold" data-translate="Voyageurs*">Voyageurs*</label>
+                                {{ form.nombre_voyageurs }}
+                        </div>
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-search"></i> <span data-translate="Rechercher">Rechercher</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+
+                <!-- Section Je gère ma réservation -->
+                <div id="manage-section" class="tab-content" style="display: none;">
+                    <p class="text-muted text-center mb-4" data-translate="Retrouvez votre billet pour l'annuler ou changer d'horaire.">Retrouvez votre billet pour l'annuler ou changer d'horaire.</p>
+                    <form method="post" action="{% url 'reservations:gerer_reservation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="rechercher">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold" data-translate="Code du dossier / N° de commande">Code du dossier / N° de commande</label>
+                                <input type="text" name="code_reservation" class="form-control" placeholder="EX : AB12CD34" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold" data-translate="Adresse email utilisée">Adresse email utilisée</label>
+                                <input type="email" name="email" class="form-control" placeholder="exemple@email.com" required>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-search"></i> <span data-translate="Rechercher ma réservation">Rechercher ma réservation</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if offres %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-4"><i class="bi bi-tag-fill"></i> <span data-translate="Offres spéciales">Offres spéciales</span></h3>
+        </div>
+        {% for offre in offres %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ offre.titre }}</h5>
+                    <p class="card-text">{{ offre.description|truncatewords:20 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success fs-6">-{{ offre.reduction_pourcentage }}%</span>
+                        <a href="{% url 'reservations:offres_promotions' %}" class="btn btn-sm btn-outline-primary">
+                            <span data-translate="Voir plus">Voir plus</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<div class="modal fade datetime-modal" id="dateTimeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-calendar3"></i> <span data-translate="Mon départ">Mon départ</span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label class="form-label" data-translate="Choisissez votre date">Choisissez votre date</label>
+                <input type="date" id="modalDate" class="form-control mb-3">
+
+                <label class="form-label" data-translate="Choisissez une période">Choisissez une période</label>
+                <div class="d-flex flex-wrap mb-3">
+                    <button type="button" class="time-option" data-time="08:00" data-translate="Matin">Matin</button>
+                    <button type="button" class="time-option" data-time="14:00" data-translate="Après-midi">Après-midi</button>
+                    <button type="button" class="time-option" data-time="19:00" data-translate="Soirée">Soirée</button>
+                </div>
+
+                <label class="form-label" data-translate="Ou précisez une heure">Ou précisez une heure</label>
+                <input type="time" id="modalTime" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-translate="Annuler">Annuler</button>
+                <button type="button" class="btn btn-primary" id="confirmDateTime" data-translate="Confirmer">Confirmer</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion des onglets
+    const tabSearch = document.getElementById('tab-search');
+    const tabManage = document.getElementById('tab-manage');
+    const searchSection = document.getElementById('search-section');
+    const manageSection = document.getElementById('manage-section');
+
+    function switchTab(activeTab) {
+        // Réinitialiser tous les boutons
+        tabSearch.classList.remove('active');
+        tabManage.classList.remove('active');
+        searchSection.style.display = 'none';
+        manageSection.style.display = 'none';
+
+        // Activer le bon onglet
+        if (activeTab === 'search') {
+            tabSearch.classList.add('active');
+            searchSection.style.display = 'block';
+        } else {
+            tabManage.classList.add('active');
+            manageSection.style.display = 'block';
+        }
+    }
+
+    tabSearch.addEventListener('click', function() {
+        switchTab('search');
+    });
+
+    tabManage.addEventListener('click', function() {
+        switchTab('manage');
+    });
+
+    document.querySelectorAll('.select-placeholder').forEach(function(select) {
+        function togglePlaceholderColor() {
+            if (!select.value) {
+                select.classList.add('placeholder-empty');
+            } else {
+                select.classList.remove('placeholder-empty');
+            }
+        }
+        togglePlaceholderColor();
+        select.addEventListener('change', togglePlaceholderColor);
+    });
+    // Custom datetime picker
+    const dateInput = document.querySelector('.actual-date-input');
+    const timeInput = document.querySelector('.actual-time-input');
+    const openPickerBtn = document.getElementById('openDateTimePicker');
+    const dateDisplay = document.getElementById('selectedDateDisplay');
+    const modalEl = document.getElementById('dateTimeModal');
+    const dateModalInput = document.getElementById('modalDate');
+    const timeModalInput = document.getElementById('modalTime');
+    const confirmBtn = document.getElementById('confirmDateTime');
+    const timeOptionButtons = document.querySelectorAll('.time-option');
+    const datetimeModal = new bootstrap.Modal(modalEl);
+
+    function formatDateForDisplay(value) {
+        if (!value) return 'jj/mm/aaaa';
+        const dateObj = new Date(value);
+        return dateObj.toLocaleDateString('fr-FR', {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    }
+
+    function ensureDefaultDate() {
+        if (!dateInput.value) {
+            const todayISO = new Date().toISOString().split('T')[0];
+            dateInput.value = todayISO;
+            dateInput.setAttribute('value', todayISO);
+        }
+    }
+
+    function syncDisplay() {
+        ensureDefaultDate();
+        dateDisplay.textContent = formatDateForDisplay(dateInput.value);
+    }
+
+    function highlightTimeOption(value) {
+        timeOptionButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.time === value);
+        });
+    }
+
+    openPickerBtn.addEventListener('click', () => {
+        ensureDefaultDate();
+        const currentDate = dateInput.value || dateInput.getAttribute('value');
+        dateModalInput.value = currentDate;
+        dateModalInput.min = dateInput.getAttribute('min') || currentDate;
+        timeModalInput.value = timeInput.value || '';
+        highlightTimeOption(timeModalInput.value);
+        datetimeModal.show();
+    });
+
+    timeOptionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const value = btn.dataset.time;
+            timeModalInput.value = value;
+            highlightTimeOption(value);
+        });
+    });
+
+    confirmBtn.addEventListener('click', () => {
+        if (dateModalInput.value) {
+            dateInput.value = dateModalInput.value;
+        }
+        timeInput.value = timeModalInput.value;
+        syncDisplay();
+        datetimeModal.hide();
+    });
+
+    syncDisplay();
+});
+</script>
+{% endblock %}
+

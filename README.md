@@ -40,6 +40,8 @@ AGCF Voyages est une application web complète de réservation de billets de tra
 * Statistiques personnelles
 * Accès rapide aux dernières réservations
 * Gestion complète des billets
+* Visualisations interactives (Chart.js) des tendances de réservations et retards
+* Suivi temps réel des retards rencontrés
 
 ### Offres et promotions
 
@@ -53,6 +55,12 @@ AGCF Voyages est une application web complète de réservation de billets de tra
 * Code QR pour contrôle à l'embarquement
 * Envoi automatique par email
 * Téléchargement depuis l'espace utilisateur
+
+### Exploitation & maintenance
+
+* Module de signalement des retards pour les opérateurs AGCF
+* Planification de la maintenance et indisponibilité automatique des trains concernés
+* Documentation UML (cas d'utilisation, classes, séquence) disponible dans `documentation/UML.md`
 
 ## Installation
 
@@ -92,12 +100,14 @@ python -m venv venv
 4. **Installer les dépendances**
 
 ```bash
+cd backend
 pip install -r requirements.txt
 ```
 
 5. **Effectuer les migrations**
 
 ```bash
+cd backend
 python manage.py makemigrations
 python manage.py migrate
 ```
@@ -105,12 +115,22 @@ python manage.py migrate
 6. **Créer un superutilisateur (pour accéder à l'admin)**
 
 ```bash
+cd backend
 python manage.py createsuperuser
 ```
 
 7. **Lancer le serveur de développement**
 
 ```bash
+# Option 1: Utiliser le script de démarrage (Windows)
+run_server.bat
+
+# Option 2: Utiliser le script de démarrage (Linux/Mac)
+chmod +x run_server.sh
+./run_server.sh
+
+# Option 3: Commande manuelle
+cd backend
 python manage.py runserver
 ```
 
@@ -134,15 +154,31 @@ Pour tester l'application, vous devez créer des données de test (gares, trains
 
 ## Structure du projet
 
+Le projet est organisé en deux dossiers principaux : **backend** et **frontend**.
+
 ```
 AGCF/
-├── agcf_voyage/          # Configuration du projet Django
-│   ├── settings.py       # Paramètres du projet
-│   ├── urls.py           # URLs principales
-│   └── wsgi.py           # Configuration WSGI
-├── reservations/         # Application principale de réservation
-│   ├── models.py         # Modèles de données
-│   ├── views.py          # Vues de l'application
+├── backend/              # Code backend (Django)
+│   ├── agcf_voyage/      # Configuration du projet Django
+│   │   ├── settings.py   # Paramètres du projet
+│   │   ├── urls.py       # URLs principales
+│   │   └── wsgi.py       # Configuration WSGI
+│   ├── reservations/     # Application principale de réservation
+│   │   ├── models.py     # Modèles de données
+│   │   ├── views.py      # Vues de l'application
+│   ├── accounts/         # Application de gestion des comptes
+│   ├── manage.py         # Script de gestion Django
+│   └── requirements.txt  # Dépendances Python
+├── frontend/             # Code frontend
+│   ├── templates/        # Templates HTML Django
+│   │   ├── base.html     # Template de base
+│   │   ├── accounts/     # Templates d'authentification
+│   │   └── reservations/ # Templates de réservation
+│   ├── static/           # Fichiers statiques (CSS, JS, images)
+│   ├── media/            # Fichiers média uploadés
+│   └── staticfiles/      # Fichiers statiques collectés
+├── run_server.bat        # Script de démarrage (Windows)
+├── run_server.sh         # Script de démarrage (Linux/Mac)
 │   ├── forms.py          # Formulaires
 │   ├── urls.py           # URLs de l'application
 │   ├── admin.py          # Configuration admin

@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de bord - AGCF Voyages{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">
+        <i class="bi bi-speedometer2"></i> <span data-translate="Tableau de bord">Tableau de bord</span>
+    </h2>
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-primary">{{ stats.total }}</h3>
+                    <p class="text-muted mb-0" data-translate="Total réservations">Total réservations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-success">{{ stats.confirmees }}</h3>
+                    <p class="text-muted mb-0" data-translate="Confirmées">Confirmées</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-warning">{{ stats.a_venir }}</h3>
+                    <p class="text-muted mb-0" data-translate="À venir">À venir</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-danger">{{ stats.annulees }}</h3>
+                    <p class="text-muted mb-0" data-translate="Annulées">Annulées</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-graph-up"></i> <span data-translate="Historique des réservations">Historique des réservations</span></h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="reservationsChart" height="220"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-diamond"></i> <span data-translate="Retards rencontrés">Retards rencontrés</span></h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="retardsChart" height="220"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-clock-history"></i> <span data-translate="Dernières réservations">Dernières réservations</span></h5>
+        </div>
+        <div class="card-body">
+            {% if reservations %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th data-translate="Code">Code</th>
+                            <th data-translate="Train">Train</th>
+                            <th data-translate="Date voyage">Date voyage</th>
+                            <th data-translate="Prix">Prix</th>
+                            <th data-translate="Statut">Statut</th>
+                            <th data-translate="Actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reservation in reservations %}
+                        <tr>
+                            <td><strong>{{ reservation.code_reservation }}</strong></td>
+                            <td>{{ reservation.train.numero }}</td>
+                            <td>{{ reservation.date_voyage|date:"d/m/Y" }}</td>
+                            <td>{{ reservation.prix_total }} DH</td>
+                            <td>
+                                {% if reservation.statut == 'confirmee' %}
+                                <span class="badge bg-success">{{ reservation.get_statut_display }}</span>
+                                {% elif reservation.statut == 'annulee' %}
+                                <span class="badge bg-danger">{{ reservation.get_statut_display }}</span>
+                                {% else %}
+                                <span class="badge bg-warning">{{ reservation.get_statut_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'reservations:detail_reservation' reservation.code_reservation %}" 
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i> <span data-translate="Voir">Voir</span>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-3">
+                <a href="{% url 'reservations:mes_reservations' %}" class="btn btn-primary">
+                    <span data-translate="Voir toutes mes réservations">Voir toutes mes réservations</span>
+                </a>
+            </div>
+            {% else %}
+            <p class="text-center text-muted" data-translate="Aucune réservation pour le moment.">Aucune réservation pour le moment.</p>
+            <div class="text-center">
+                <a href="{% url 'reservations:home' %}" class="btn btn-primary">
+                    <i class="bi bi-search"></i> <span data-translate="Rechercher votre voyage">Rechercher votre voyage</span>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-info-circle"></i> <span data-translate="Retards récents sur vos trajets">Retards récents sur vos trajets</span></h5>
+        </div>
+        <div class="card-body">
+            {% if retards_recents %}
+            <div class="list-group">
+                {% for retard in retards_recents %}
+                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">Train {{ retard.train.numero }} - {{ retard.train.gare_depart.ville }} → {{ retard.train.gare_arrivee.ville }}</h6>
+                        <small class="text-muted"><span data-translate="Voyage du">Voyage du</span> {{ retard.date_voyage|date:"d/m/Y" }} • {{ retard.minutes_retard }} <span data-translate="min de retard">min de retard</span></small>
+                    </div>
+                    <span class="badge {% if retard.statut == 'resolu' %}bg-success{% elif retard.statut == 'en_cours' %}bg-info text-dark{% else %}bg-warning text-dark{% endif %}">
+                        {{ retard.get_statut_display }}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="mb-0 text-muted text-center" data-translate="Aucun retard signalé sur vos trajets récents.">Aucun retard signalé sur vos trajets récents.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const reservationsChartData = JSON.parse('{{ chart_data|escapejs }}');
+    const retardsChartData = JSON.parse('{{ retard_chart_data|escapejs }}');
+
+    if (document.getElementById('reservationsChart')) {
+        new Chart(document.getElementById('reservationsChart'), {
+            type: 'line',
+            data: reservationsChartData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                }
+            }
+        });
+    }
+
+    if (document.getElementById('retardsChart')) {
+        new Chart(document.getElementById('retardsChart'), {
+            type: 'bar',
+            data: retardsChartData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false },
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}
+
