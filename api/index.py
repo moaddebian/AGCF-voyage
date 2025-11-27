@@ -1,0 +1,25 @@
+"""
+Point d'entrée Vercel pour Django
+Ce fichier est utilisé par Vercel pour router toutes les requêtes vers Django
+"""
+import os
+import sys
+from pathlib import Path
+
+# Ajouter le répertoire backend au PYTHONPATH
+backend_dir = Path(__file__).parent.parent / 'backend'
+sys.path.insert(0, str(backend_dir))
+
+# Configurer les variables d'environnement Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'agcf_voyage.settings')
+
+# Importer l'application WSGI Django
+from django.core.wsgi import get_wsgi_application
+
+# Initialiser l'application Django
+django_app = get_wsgi_application()
+
+# Exporter l'application pour Vercel
+# @vercel/python détectera automatiquement cette variable
+application = django_app
+
