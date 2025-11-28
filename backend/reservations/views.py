@@ -52,7 +52,12 @@ def get_cart_count(request):
 def home(request):
     """Page d'accueil avec formulaire de recherche"""
     form = RechercheTrainForm()
-    offres = OffrePromotion.objects.filter(actif=True, date_debut__lte=date.today(), date_fin__gte=date.today())[:3]
+    try:
+        today = timezone.now().date()
+        offres = OffrePromotion.objects.filter(actif=True, date_debut__lte=today, date_fin__gte=today)[:3]
+    except Exception as e:
+        # En cas d'erreur (table n'existe pas, erreur de connexion, etc.), utiliser une liste vide
+        offres = []
     
     if request.method == 'POST':
         form = RechercheTrainForm(request.POST)
@@ -1194,7 +1199,10 @@ def gestion_maintenance(request):
 
 def offres_promotions(request):
     """Page des offres et promotions"""
-    offres = OffrePromotion.objects.filter(actif=True).order_by('-date_debut')
+    try:
+        offres = OffrePromotion.objects.filter(actif=True).order_by('-date_debut')
+    except Exception:
+        offres = []
     
     # Filtrer les offres valides
     offres_valides = [offre for offre in offres if offre.est_valide()]

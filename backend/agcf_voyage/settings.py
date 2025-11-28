@@ -30,23 +30,23 @@ FRONTEND_DIR = PROJECT_ROOT / 'frontend'  # Points to frontend/
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-agcf-voyage-dev-key-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
-# Configuration ALLOWED_HOSTS pour Vercel
+# Configuration ALLOWED_HOSTS
 allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '')
 if allowed_hosts_env:
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
 else:
-    # Par défaut, accepter tous les domaines Vercel
-    ALLOWED_HOSTS = ['*']  # Accepte tous les domaines (sécurisé sur Vercel)
+    # Par défaut pour le développement local
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Configuration CSRF_TRUSTED_ORIGINS
 csrf_origins_env = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
 if csrf_origins_env:
     CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_env.split(',') if origin.strip()]
 else:
-    # Par défaut, accepter tous les domaines Vercel avec https
-    CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
+    # Par défaut pour le développement local
+    CSRF_TRUSTED_ORIGINS = []
 
 
 # Application definition
@@ -102,26 +102,30 @@ WSGI_APPLICATION = 'agcf_voyage.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Configuration MySQL
-# Pour utiliser SQLite en développement, commentez la section MySQL et décommentez SQLite ci-dessous
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'agcf_voyage'),
-        'USER': os.environ.get('DB_USER', 'root'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'Mouad1232002'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset': 'utf8mb4',
-        },
-    }
-}
-
+# Configuration de la base de données
 database_url = os.environ.get('DATABASE_URL')
+
+# Si DATABASE_URL est définie, l'utiliser (priorité)
 if database_url and dj_database_url:
-    DATABASES['default'] = dj_database_url.parse(database_url, conn_max_age=600, ssl_require=True)
+    DATABASES = {
+        'default': dj_database_url.parse(database_url, conn_max_age=600, ssl_require=True)
+    }
+# Sinon, utiliser la configuration par défaut (développement local)
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('DB_NAME', 'agcf_voyage'),
+            'USER': os.environ.get('DB_USER', 'root'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'Mouad1232002'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '3306'),
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                'charset': 'utf8mb4',
+            },
+        }
+    }
 
 # Configuration SQLite (pour développement local - décommentez pour utiliser)
 # DATABASES = {
