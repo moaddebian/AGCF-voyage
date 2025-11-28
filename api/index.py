@@ -23,7 +23,6 @@ from django.core.wsgi import get_wsgi_application
 django_app = get_wsgi_application()
 
 # Exporter l'application pour Vercel
-# Vercel cherche 'handler' ou 'app', pas 'application'
-handler = django_app
+# Vercel détecte automatiquement l'application WSGI
 app = django_app
 
