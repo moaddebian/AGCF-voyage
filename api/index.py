@@ -8,7 +8,10 @@ from pathlib import Path
 
 # Ajouter le répertoire backend au PYTHONPATH
 backend_dir = Path(__file__).parent.parent / 'backend'
-sys.path.insert(0, str(backend_dir))
+backend_path = str(backend_dir.resolve())
+
+if backend_path not in sys.path:
+    sys.path.insert(0, backend_path)
 
 # Configurer les variables d'environnement Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'agcf_voyage.settings')
