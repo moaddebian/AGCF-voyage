@@ -32,8 +32,21 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-agcf-voyage-dev-key-c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = [host for host in os.environ.get('ALLOWED_HOSTS', '').split(',') if host]
-CSRF_TRUSTED_ORIGINS = [origin for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if origin]
+# Configuration ALLOWED_HOSTS pour Vercel
+allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '')
+if allowed_hosts_env:
+    ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
+else:
+    # Par défaut, accepter tous les domaines Vercel
+    ALLOWED_HOSTS = ['*']  # Accepte tous les domaines (sécurisé sur Vercel)
+
+# Configuration CSRF_TRUSTED_ORIGINS
+csrf_origins_env = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+if csrf_origins_env:
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_env.split(',') if origin.strip()]
+else:
+    # Par défaut, accepter tous les domaines Vercel avec https
+    CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
 
 
 # Application definition
