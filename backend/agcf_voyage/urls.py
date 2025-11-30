@@ -6,9 +6,6 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.i18n import set_language
-from django.template.response import TemplateResponse
-from reservations.admin_analytics import get_admin_urls
-from reservations.admin_dashboard import get_dashboard_stats
 
 # Personnalisation de l'interface d'administration
 admin.site.site_header = "Administration AGCF Voyages"
