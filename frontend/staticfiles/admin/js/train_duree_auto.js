@@ -98,7 +98,6 @@
                     }
                 }
                 
-                const message = '✓ Durée calculée automatiquement: ' + heures + 'h' + String(minutes).padStart(2, '0');
                 helpText.html(message);
                 helpText.css('color', '#28a745');
                 helpText.show();

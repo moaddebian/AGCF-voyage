@@ -4,57 +4,96 @@
 {% block title %}Ajouter une carte de réduction - AGCF Voyages{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="bi bi-credit-card"></i> Ajouter une carte de réduction
-                    </h4>
+        <div class="col-lg-6 col-xl-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-gradient-primary text-white text-center py-4">
+                    <div class="mb-2">
+                        <i class="bi bi-credit-card-fill" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h2 class="mb-0 fw-bold">Ajouter une carte de réduction</h2>
+                    <p class="mb-0 mt-2 opacity-75">Bénéficiez de réductions sur vos voyages</p>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4 p-md-5">
                     {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <h6><i class="bi bi-exclamation-triangle"></i> Erreurs dans le formulaire :</h6>
-                        <ul class="mb-0">
-                            {% for field, errors in form.errors.items %}
-                                {% for error in errors %}
-                                    <li>{{ field|title }}: {{ error }}</li>
+                    <div class="alert alert-danger d-flex align-items-start mb-4" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                        <div>
+                            <h6 class="alert-heading mb-2">Erreurs dans le formulaire :</h6>
+                            <ul class="mb-0 small">
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field|title }}: {{ error }}</li>
+                                    {% endfor %}
                                 {% endfor %}
-                            {% endfor %}
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
                     {% endif %}
-                    <form method="post">
+                    
+                    <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="{{ form.carte.id_for_label }}" class="form-label">{{ form.carte.label }}</label>
-                            {{ form.carte }}
+                        <div class="mb-4">
+                            <label for="{{ form.carte.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.carte.label }} <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-card-list"></i>
+                                </span>
+                                {{ form.carte }}
+                            </div>
                             {% if form.carte.errors %}
-                                <div class="text-danger small">{{ form.carte.errors }}</div>
+                                <div class="text-danger small mt-1">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ form.carte.errors.0 }}
+                                </div>
                             {% endif %}
                         </div>
-                        <div class="mb-3">
-                            <label for="{{ form.numero_carte.id_for_label }}" class="form-label">{{ form.numero_carte.label }}</label>
-                            {{ form.numero_carte }}
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.numero_carte.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.numero_carte.label }} <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-123"></i>
+                                </span>
+                                {{ form.numero_carte }}
+                            </div>
                             {% if form.numero_carte.errors %}
-                                <div class="text-danger small">{{ form.numero_carte.errors }}</div>
+                                <div class="text-danger small mt-1">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ form.numero_carte.errors.0 }}
+                                </div>
                             {% endif %}
+                            <small class="form-text text-muted">
+                                <i class="bi bi-info-circle me-1"></i>Entrez le numéro complet de votre carte
+                            </small>
                         </div>
-                        <div class="mb-3">
-                            <label for="{{ form.date_expiration.id_for_label }}" class="form-label">{{ form.date_expiration.label }}</label>
-                            {{ form.date_expiration }}
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.date_expiration.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.date_expiration.label }} <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-calendar3"></i>
+                                </span>
+                                {{ form.date_expiration }}
+                            </div>
                             {% if form.date_expiration.errors %}
-                                <div class="text-danger small">{{ form.date_expiration.errors }}</div>
+                                <div class="text-danger small mt-1">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ form.date_expiration.errors.0 }}
+                                </div>
                             {% endif %}
                         </div>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'accounts:profil' %}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left"></i> Annuler
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% url 'accounts:profil' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>Annuler
                             </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle"></i> Ajouter
+                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                                <i class="bi bi-check-circle me-2"></i>Ajouter la carte
                             </button>
                         </div>
                     </form>

@@ -1,0 +1,824 @@
+/* ============================================
+   RAILADMIN PRO - Design Professionnel
+   ============================================ */
+
+:root {
+    --sidebar-bg: #1e293b;
+    --sidebar-hover: #334155;
+    --sidebar-active: #6366f1;
+    --header-bg: #0f172a;
+    --header-bg-light: #1e293b;
+    --main-bg: #f1f5f9;
+    --card-bg: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --green: #10b981;
+    --green-light: #d1fae5;
+    --orange: #f59e0b;
+    --orange-light: #fef3c7;
+    --purple: #6366f1;
+    --purple-light: #e0e7ff;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+}
+
+/* Reset */
+* {
+    box-sizing: border-box;
+}
+
+body.railadmin-pro {
+    background: var(--main-bg) !important;
+    color: var(--text-primary) !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ============================================
+   HEADER - Two-tier Top Bar
+   ============================================ */
+.railadmin-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+
+.header-top {
+    background: var(--header-bg) !important;
+    height: 50px;
+}
+
+.header-top-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 100%;
+}
+
+.brand-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.3px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+}
+
+.header-icon {
+    color: #cbd5e1;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    padding: 0.4rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-icon:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    font-size: 1.3rem !important;
+}
+
+.header-bottom {
+    background: var(--header-bg-light) !important;
+    height: 45px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-bottom-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 2rem;
+    height: 100%;
+}
+
+/* AI Analysis Button */
+.ai-analysis-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    background: var(--purple);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.ai-analysis-btn:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.ai-analysis-btn i {
+    font-size: 1rem;
+}
+
+/* ============================================
+   SIDEBAR - Left Navigation
+   ============================================ */
+.railadmin-sidebar {
+    position: fixed;
+    left: 0;
+    top: 95px;
+    width: 260px;
+    height: calc(100vh - 95px);
+    background: var(--sidebar-bg);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 1.5rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo i {
+    font-size: 1.5rem;
+    color: #ffffff;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+}
+
+.nav-section {
+    margin-bottom: 2rem;
+}
+
+.nav-section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    padding: 0 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+}
+
+.nav-link i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.nav-link:hover {
+    background: var(--sidebar-hover);
+    color: #ffffff;
+    border-left-color: var(--purple);
+}
+
+.nav-link.active {
+    background: rgba(99, 102, 241, 0.1);
+    color: #ffffff;
+    border-left-color: var(--purple);
+}
+
+.sidebar-footer {
+    padding: 1rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sign-out {
+    color: #ef4444 !important;
+}
+
+.sign-out:hover {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-left-color: #ef4444 !important;
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+   ============================================ */
+.railadmin-main-content {
+    margin-left: 260px;
+    margin-top: 95px;
+    padding: 2rem;
+    min-height: calc(100vh - 95px);
+    background: var(--main-bg);
+}
+
+.content-header {
+    margin-bottom: 2rem;
+}
+
+.welcome-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 400;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.page-subtitle {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--text-primary);
+}
+
+/* Metrics Cards */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+}
+
+.metric-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.metric-icon {
+    font-size: 1.5rem;
+    color: var(--purple);
+    opacity: 0.7;
+}
+
+.metric-change,
+.metric-status {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.metric-change.positive {
+    color: var(--green);
+}
+
+.metric-status.positive {
+    color: var(--green);
+}
+
+.metric-status.warning {
+    color: var(--orange);
+}
+
+/* Charts Section */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chart-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+.chart-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+}
+
+.chart-placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-placeholder canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Modules Container */
+.modules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Floating AI Button */
+.floating-ai-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.floating-ai-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+.floating-ai-btn i {
+    font-size: 1.5rem;
+    color: #ffffff;
+}
+
+/* ============================================
+   DJANGO ADMIN MODULES
+   ============================================ */
+.module {
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin-bottom: 0;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border);
+}
+
+.module:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.module h2 {
+    background: var(--sidebar-bg);
+    color: #ffffff !important;
+    padding: 1rem 1.5rem;
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.module h2 i {
+    color: #ffffff;
+}
+
+.module table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.module th {
+    background: var(--main-bg);
+    padding: 0.875rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.module td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+.module tr:last-child td {
+    border-bottom: none;
+}
+
+.module tr:hover td {
+    background: var(--main-bg);
+}
+
+.module ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.module li {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.2s ease;
+}
+
+.module li:hover {
+    background: var(--main-bg);
+}
+
+.module li:last-child {
+    border-bottom: none;
+}
+
+.module li a {
+    flex: 1;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.module li a:hover {
+    color: var(--purple);
+}
+
+/* ============================================
+   BOUTONS
+   ============================================ */
+.addlink,
+.changelink,
+.viewlink {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    margin: 0 0.25rem;
+    border: none;
+    cursor: pointer;
+}
+
+.addlink {
+    background: var(--green);
+    color: #ffffff !important;
+}
+
+.addlink:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    color: #ffffff !important;
+}
+
+.changelink {
+    background: var(--orange);
+    color: #ffffff !important;
+}
+
+.changelink:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    color: #ffffff !important;
+}
+
+.viewlink {
+    background: var(--purple);
+    color: #ffffff !important;
+}
+
+.viewlink:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    color: #ffffff !important;
+}
+
+.module li .addlink,
+.module li .changelink {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.railadmin-footer {
+    background: var(--header-bg);
+    color: #94a3b8;
+    text-align: center;
+    padding: 1rem;
+    margin-left: 260px;
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.railadmin-footer p {
+    margin: 0;
+}
+
+/* ============================================
+   OVERRIDES POUR DJANGO ADMIN
+   ============================================ */
+#header {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#branding {
+    display: none !important;
+}
+
+#site-name {
+    display: none !important;
+}
+
+#content {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#content-main {
+    padding: 0 !important;
+}
+
+#user-tools {
+    display: none !important;
+}
+
+/* Masquer le titre Django par défaut */
+h1#site-name,
+#site-name a,
+.agcf-admin-branding,
+.admin-title {
+    display: none !important;
+}
+
+/* Masquer le breadcrumb Django */
+.breadcrumbs {
+    display: none !important;
+}
+
+/* S'assurer que le header personnalisé est visible */
+.railadmin-header {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* S'assurer que la sidebar est visible */
+.railadmin-sidebar {
+    display: flex !important;
+    visibility: visible !important;
+}
+
+/* Messages */
+.messagelist {
+    margin: 1rem 2rem;
+}
+
+.messagelist li {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Formulaires */
+.form-row {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.form-row label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    background: var(--card-bg);
+    color: var(--text-primary);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.default,
+.submit-row input {
+    background: var(--purple);
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.default:hover,
+.submit-row input:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1024px) {
+    .railadmin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .railadmin-sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .railadmin-main-content {
+        margin-left: 0;
+    }
+    
+    .railadmin-footer {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .railadmin-main-content {
+        padding: 1rem;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-top-content {
+        padding: 0 1rem;
+    }
+    
+    .brand-title {
+        font-size: 0.9rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .page-subtitle {
+        font-size: 1.2rem;
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--main-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--sidebar-hover);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.railadmin-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.railadmin-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
