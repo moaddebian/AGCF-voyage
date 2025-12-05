@@ -197,17 +197,17 @@ try:
     import cloudinary.api
     
     CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.environ.get('df0c3lvlx', ''),
-        'API_KEY': os.environ.get('771282459579441', ''),
-        'API_SECRET': os.environ.get('psW0mqjrl97hSXeYAt-YgSziVFQ', ''),
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
     }
     
     # Configurer Cloudinary seulement si les credentials sont fournis
     if all([CLOUDINARY_STORAGE['CLOUD_NAME'], CLOUDINARY_STORAGE['API_KEY'], CLOUDINARY_STORAGE['API_SECRET']]):
         cloudinary.config(
-            cloud_name=CLOUDINARY_STORAGE['df0c3lvlx'],
-            api_key=CLOUDINARY_STORAGE['771282459579441'],
-            api_secret=CLOUDINARY_STORAGE['psW0mqjrl97hSXeYAt-YgSziVFQ'],
+            cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+            api_key=CLOUDINARY_STORAGE['API_KEY'],
+            api_secret=CLOUDINARY_STORAGE['API_SECRET'],
         )
         # Utiliser Cloudinary pour les fichiers médias en production
         DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -232,7 +232,7 @@ LOGOUT_REDIRECT_URL = 'reservations:home'
 
 # Email settings (pour l'envoi de billets)
 # Configuration Resend (pour production)
-RESEND_API_KEY = os.environ.get('re_BBvNeWKM_5Bt8njhGeFQcTYdEt3pbUVpV', '')
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
 
 if RESEND_API_KEY:
     # Utiliser Resend en production
@@ -241,8 +241,8 @@ if RESEND_API_KEY:
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = 'resend'  # Toujours 'resend' pour Resend
-    EMAIL_HOST_PASSWORD = re_BBvNeWKM_5Bt8njhGeFQcTYdEt3pbUVpV  # Utiliser l'API key comme mot de passe
-    EMAIL_FROM = os.environ.get('EMAIL_FROM', 'onboarding@resend.dev')
+    EMAIL_HOST_PASSWORD = RESEND_API_KEY  # Utiliser l'API key comme mot de passe
+    EMAIL_FROM = os.environ.get('EMAIL_FROM', 'agcf-voyage@agcf.com')
     DEFAULT_FROM_EMAIL = EMAIL_FROM
 else:
     # Utiliser console backend en développement
