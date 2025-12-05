@@ -60,8 +60,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_bootstrap5',
-    'cloudinary_storage',  # Pour Cloudinary (doit être avant 'django.contrib.staticfiles')
-    'cloudinary',  # Pour Cloudinary
     'reservations',
     'accounts',
 ]
@@ -107,7 +105,7 @@ WSGI_APPLICATION = 'agcf_voyage.wsgi.application'
 # Configuration de la base de données
 database_url = os.environ.get('DATABASE_URL')
 
-# Si DATABASE_URL est définie, l'utiliser (priorité) - Pour Railway PostgreSQL
+# Si DATABASE_URL est définie, l'utiliser (priorité)
 if database_url and dj_database_url:
     DATABASES = {
         'default': dj_database_url.parse(database_url, conn_max_age=600, ssl_require=True)
@@ -116,12 +114,16 @@ if database_url and dj_database_url:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',  # Changé de mysql à postgresql
+            'ENGINE': 'django.db.backends.mysql',
             'NAME': os.environ.get('DB_NAME', 'agcf_voyage'),
-            'USER': os.environ.get('DB_USER', 'postgres'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'USER': os.environ.get('DB_USER', 'root'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'Mouad1232002'),
             'HOST': os.environ.get('DB_HOST', 'localhost'),
-            'PORT': os.environ.get('DB_PORT', '5432'),
+            'PORT': os.environ.get('DB_PORT', '3306'),
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                'charset': 'utf8mb4',
+            },
         }
     }
 
@@ -187,34 +189,19 @@ STATICFILES_DIRS = [FRONTEND_DIR / 'static']
 STATIC_ROOT = FRONTEND_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = FRONTEND_DIR / 'media'
+# Configuration pour Vercel (serverless)
+IS_VERCEL = os.environ.get('VERCEL', False)
 
-# Cloudinary Configuration (pour stockage des médias en production)
-try:
-    import cloudinary
-    import cloudinary.uploader
-    import cloudinary.api
-    
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
-        'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
-        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
-    }
-    
-    # Configurer Cloudinary seulement si les credentials sont fournis
-    if all([CLOUDINARY_STORAGE['CLOUD_NAME'], CLOUDINARY_STORAGE['API_KEY'], CLOUDINARY_STORAGE['API_SECRET']]):
-        cloudinary.config(
-            cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
-            api_key=CLOUDINARY_STORAGE['API_KEY'],
-            api_secret=CLOUDINARY_STORAGE['API_SECRET'],
-        )
-        # Utiliser Cloudinary pour les fichiers médias en production
-        DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-        # MEDIA_URL sera géré automatiquement par Cloudinary
-except ImportError:
-    # Cloudinary non installé, utiliser le stockage local
-    pass
+if IS_VERCEL:
+    # Sur Vercel, utiliser WhiteNoise pour les fichiers statiques
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # Pour les fichiers média, vous devrez configurer un stockage cloud (S3, Cloudinary, etc.)
+    # Voir DEPLOIEMENT_VERCEL.md pour plus de détails
+    MEDIA_URL = 'media/'
+    MEDIA_ROOT = FRONTEND_DIR / 'media'
+else:
+    MEDIA_URL = 'media/'
+    MEDIA_ROOT = FRONTEND_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -231,25 +218,9 @@ LOGIN_REDIRECT_URL = 'reservations:dashboard'
 LOGOUT_REDIRECT_URL = 'reservations:home'
 
 # Email settings (pour l'envoi de billets)
-# Configuration Resend (pour production)
-RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
-
-if RESEND_API_KEY:
-    # Utiliser Resend en production
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.resend.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = 'resend'  # Toujours 'resend' pour Resend
-    EMAIL_HOST_PASSWORD = RESEND_API_KEY  # Utiliser l'API key comme mot de passe
-    EMAIL_FROM = os.environ.get('EMAIL_FROM', 'agcf-voyage@agcf.com')
-    DEFAULT_FROM_EMAIL = EMAIL_FROM
-else:
-    # Utiliser console backend en développement
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = ''
-    EMAIL_HOST_PASSWORD = ''
-    DEFAULT_FROM_EMAIL = 'noreply@agcf-voyages.com'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
