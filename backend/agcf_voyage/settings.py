@@ -40,11 +40,6 @@ else:
     # Par défaut pour le développement local
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-# Sur Vercel, accepter tous les domaines *.vercel.app
-if os.environ.get('VERCEL', False):
-    ALLOWED_HOSTS = ['*']  # Accepter tous les domaines sur Vercel
-    # Ou plus restrictif : ALLOWED_HOSTS = ['.vercel.app']
-
 # Configuration CSRF_TRUSTED_ORIGINS
 csrf_origins_env = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
 if csrf_origins_env:
@@ -52,9 +47,6 @@ if csrf_origins_env:
 else:
     # Par défaut pour le développement local
     CSRF_TRUSTED_ORIGINS = []
-
-# Note: CSRF_TRUSTED_ORIGINS doit être configuré via variable d'environnement
-# Django ne supporte pas les wildcards, donc configurez votre domaine exact dans Vercel
 
 
 # Application definition
@@ -197,19 +189,8 @@ STATICFILES_DIRS = [FRONTEND_DIR / 'static']
 STATIC_ROOT = FRONTEND_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Configuration pour Vercel (serverless)
-IS_VERCEL = os.environ.get('VERCEL', False)
-
-if IS_VERCEL:
-    # Sur Vercel, utiliser WhiteNoise pour les fichiers statiques
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    # Pour les fichiers média, vous devrez configurer un stockage cloud (S3, Cloudinary, etc.)
-    # Voir DEPLOIEMENT_VERCEL.md pour plus de détails
-    MEDIA_URL = 'media/'
-    MEDIA_ROOT = FRONTEND_DIR / 'media'
-else:
-    MEDIA_URL = 'media/'
-    MEDIA_ROOT = FRONTEND_DIR / 'media'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = FRONTEND_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
