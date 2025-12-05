@@ -4,11 +4,14 @@ nixPkgs = ["python311", "pip"]
 [phases.install]
 cmds = [
     "cd backend",
-    "pip install --upgrade pip",
+    "pip install --upgrade pip setuptools wheel",
     "pip install -r requirements.txt",
     "python manage.py collectstatic --noinput"
 ]
 
 [start]
 cmd = "cd backend && gunicorn agcf_voyage.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+
+[variables]
+NIXPACKS_PYTHON_VERSION = "3.11"
 
