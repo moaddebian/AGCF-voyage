@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
@@ -105,4 +105,12 @@ def supprimer_compte(request):
         return redirect('reservations:home')
     
     return render(request, 'accounts/supprimer_compte.html')
+
+
+def deconnexion(request):
+    """Vue de déconnexion qui accepte GET et POST"""
+    if request.user.is_authenticated:
+        logout(request)
+        messages.success(request, "Vous avez été déconnecté avec succès.")
+    return redirect('reservations:home')
 

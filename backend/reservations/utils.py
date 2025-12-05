@@ -12,6 +12,14 @@ import os
 import random
 from datetime import datetime, date
 
+# Import Cloudinary (optionnel)
+try:
+    from cloudinary.uploader import upload
+    from cloudinary.utils import cloudinary_url
+    CLOUDINARY_AVAILABLE = True
+except ImportError:
+    CLOUDINARY_AVAILABLE = False
+
 
 def generer_billet_pdf(reservation):
     """Génère un billet PDF premium inspiré des confirmations ONCF"""
@@ -202,11 +210,42 @@ def generer_billet_pdf(reservation):
     ))
 
     doc.build(story)
+    
+    # Uploader sur Cloudinary si disponible (production)
+    if CLOUDINARY_AVAILABLE and hasattr(settings, 'CLOUDINARY_STORAGE') and settings.CLOUDINARY_STORAGE.get('CLOUD_NAME'):
+        try:
+            upload_result = upload(
+                pdf_path,
+                folder="billets",
+                resource_type="raw",  # Pour les PDFs
+                public_id=f"billet_{reservation.code_reservation}",
+                overwrite=True
+            )
+            # Obtenir l'URL Cloudinary
+            cloudinary_pdf_url, _ = cloudinary_url(
+                f"billets/billet_{reservation.code_reservation}",
+                resource_type="raw"
+            )
+            
+            # Optionnel : supprimer le fichier local après upload (en production)
+            if not settings.DEBUG and os.path.exists(pdf_path):
+                try:
+                    os.remove(pdf_path)
+                except:
+                    pass  # Ignorer les erreurs de suppression
+            
+            return cloudinary_pdf_url  # Retourner l'URL Cloudinary
+        except Exception as e:
+            # En cas d'erreur Cloudinary, garder le fichier local
+            print(f"Erreur upload Cloudinary: {e}")
+            return pdf_path
+    
+    # Retourner le chemin local si Cloudinary n'est pas disponible
     return pdf_path
 
 
-def envoyer_billet_email(reservation, pdf_path, est_modification=False):
-    """Envoie le billet par email avec un template HTML premium"""
+def envoyer_billet_email(reservation, pdf_path_or_url, est_modification=False):
+    """Envoie le billet par email avec un template HTML premium (support Cloudinary)"""
     utilisateur = reservation.utilisateur
     depart_ville = reservation.train.gare_depart.ville
     arrivee_ville = reservation.train.gare_arrivee.ville
@@ -377,14 +416,32 @@ def envoyer_billet_email(reservation, pdf_path, est_modification=False):
     email = EmailMessage(
         subject=sujet,
         body=html_body,
-        from_email=settings.EMAIL_HOST_USER or 'noreply@agcf-voyages.com',
+        from_email=getattr(settings, 'EMAIL_FROM', settings.EMAIL_HOST_USER or 'noreply@agcf-voyages.com'),
         to=[reservation.utilisateur.email],
     )
     email.content_subtype = 'html'
 
-    # Attacher le PDF
-    with open(pdf_path, 'rb') as pdf:
-        email.attach(f'billet_{reservation.code_reservation}.pdf', pdf.read(), 'application/pdf')
+    # Attacher le PDF (gérer les URLs Cloudinary ou fichiers locaux)
+    if pdf_path_or_url.startswith('http'):
+        # C'est une URL Cloudinary, télécharger le PDF
+        try:
+            import requests
+            pdf_response = requests.get(pdf_path_or_url)
+            pdf_response.raise_for_status()
+            pdf_content = pdf_response.content
+            email.attach(f'billet_{reservation.code_reservation}.pdf', pdf_content, 'application/pdf')
+        except Exception as e:
+            print(f"Erreur lors du téléchargement du PDF depuis Cloudinary: {e}")
+            # Essayer de générer à nouveau le PDF localement
+            pdf_path = generer_billet_pdf(reservation)
+            if os.path.exists(pdf_path):
+                with open(pdf_path, 'rb') as pdf:
+                    email.attach(f'billet_{reservation.code_reservation}.pdf', pdf.read(), 'application/pdf')
+    else:
+        # C'est un chemin local
+        if os.path.exists(pdf_path_or_url):
+            with open(pdf_path_or_url, 'rb') as pdf:
+                email.attach(f'billet_{reservation.code_reservation}.pdf', pdf.read(), 'application/pdf')
     
     email.send()
 

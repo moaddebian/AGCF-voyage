@@ -1103,7 +1103,7 @@ def annuler_reservation(request, code):
 
 @login_required
 def telecharger_billet(request, code):
-    """Téléchargement du billet PDF (pour utilisateurs connectés)"""
+    """Téléchargement du billet PDF (pour utilisateurs connectés) - Support Cloudinary"""
     reservation = get_object_or_404(Reservation, code_reservation=code, utilisateur=request.user)
     
     if reservation.statut != 'confirmee':
@@ -1111,11 +1111,30 @@ def telecharger_billet(request, code):
         return redirect('reservations:detail_reservation', code=code)
     
     try:
-        pdf_path = generer_billet_pdf(reservation)
-        with open(pdf_path, 'rb') as pdf:
-            response = HttpResponse(pdf.read(), content_type='application/pdf')
-            response['Content-Disposition'] = f'attachment; filename="billet_{reservation.code_reservation}.pdf"'
-            return response
+        pdf_path_or_url = generer_billet_pdf(reservation)
+        
+        # Si c'est une URL Cloudinary, rediriger ou télécharger
+        if pdf_path_or_url.startswith('http'):
+            # Option 1: Rediriger vers l'URL Cloudinary (téléchargement direct)
+            return redirect(pdf_path_or_url)
+            # Option 2: Télécharger et servir (décommentez si préféré)
+            # import requests
+            # pdf_response = requests.get(pdf_path_or_url)
+            # pdf_response.raise_for_status()
+            # response = HttpResponse(pdf_response.content, content_type='application/pdf')
+            # response['Content-Disposition'] = f'attachment; filename="billet_{reservation.code_reservation}.pdf"'
+            # return response
+        
+        # Sinon, servir le fichier local
+        import os
+        if os.path.exists(pdf_path_or_url):
+            with open(pdf_path_or_url, 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type='application/pdf')
+                response['Content-Disposition'] = f'attachment; filename="billet_{reservation.code_reservation}.pdf"'
+                return response
+        else:
+            messages.error(request, "Fichier PDF introuvable.")
+            return redirect('reservations:detail_reservation', code=code)
     except Exception as e:
         messages.error(request, f"Erreur lors de la génération du billet : {str(e)}")
         return redirect('reservations:detail_reservation', code=code)
