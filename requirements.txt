@@ -1,0 +1,6 @@
+# Requirements pour Vercel
+# Ce fichier pointe vers backend/requirements.txt
+# Vercel utilisera automatiquement backend/requirements.txt si présent
+
+# Copie des dépendances principales
+-r backend/requirements.txt
