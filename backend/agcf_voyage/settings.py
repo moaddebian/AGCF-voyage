@@ -40,6 +40,11 @@ else:
     # Par défaut pour le développement local
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# Sur Vercel, accepter tous les domaines *.vercel.app
+if os.environ.get('VERCEL', False):
+    ALLOWED_HOSTS = ['*']  # Accepter tous les domaines sur Vercel
+    # Ou plus restrictif : ALLOWED_HOSTS = ['.vercel.app']
+
 # Configuration CSRF_TRUSTED_ORIGINS
 csrf_origins_env = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
 if csrf_origins_env:
@@ -47,6 +52,9 @@ if csrf_origins_env:
 else:
     # Par défaut pour le développement local
     CSRF_TRUSTED_ORIGINS = []
+
+# Note: CSRF_TRUSTED_ORIGINS doit être configuré via variable d'environnement
+# Django ne supporte pas les wildcards, donc configurez votre domaine exact dans Vercel
 
 
 # Application definition
