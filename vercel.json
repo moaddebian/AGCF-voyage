@@ -14,12 +14,8 @@
       "dest": "api/index.py"
     }
   ],
-  "env": {
-    "PYTHON_VERSION": "3.14"
-  },
   "functions": {
     "api/index.py": {
-      "runtime": "python3.14",
       "maxDuration": 30
     }
   }
