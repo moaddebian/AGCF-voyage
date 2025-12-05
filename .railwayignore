@@ -17,4 +17,7 @@ build/
 .DS_Store
 frontend/media/billets/*.pdf
 .git/
+# Ignorer les fichiers frontend qui pourraient déclencher npm
+frontend/static/**/*.js
+frontend/templates/**/*.html
 
